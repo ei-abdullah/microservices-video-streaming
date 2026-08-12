@@ -1,0 +1,19 @@
+security:
+  jwt:
+    secret-key: iuv1UjVJkuKs3BNgEOr0Vqie9Ubd3997P1YZ3U09wHA=
+
+spring:
+  application:
+    name: auth-service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+server:
+  port: 8200
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

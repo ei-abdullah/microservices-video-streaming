@@ -1,0 +1,35 @@
+security:
+  jwt:
+    secret-key: iuv1UjVJkuKs3BNgEOr0Vqie9Ubd3997P1YZ3U09wHA=
+    filter-enabled: true
+
+
+spring:
+  application:
+    name: user-service
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+  datasource:
+    url: jdbc:postgresql://localhost:5432/user_db
+    username: abdullah
+    password: admin
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8000
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/
