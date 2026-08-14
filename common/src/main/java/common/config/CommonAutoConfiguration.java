@@ -3,6 +3,7 @@ package common.config;
 import common.htmlPage.HtmlPageService;
 import common.jwt.JwtFilter;
 import common.jwt.JwtService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;

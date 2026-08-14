@@ -7,7 +7,7 @@ import common.dto.NotificationEvent;
 import common.exception.ConflictException;
 import common.exception.NotFoundException;
 import dev.videostreaming.microservice.userservice.User;
-import dev.videostreaming.microservice.userservice.UserMapper;
+import dev.videostreaming.microservice.userservice.mapper.UserMapper;
 import dev.videostreaming.microservice.userservice.dto.request.CreateUserRequest;
 import dev.videostreaming.microservice.userservice.repository.UserRepository;
 import jakarta.transaction.Transactional;

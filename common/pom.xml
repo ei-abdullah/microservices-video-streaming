@@ -19,6 +19,7 @@
     <properties>
         <java.version>26</java.version>
         <spring-cloud.version>2025.1.2</spring-cloud.version>
+        <aws.java.s3.version>2.52.0</aws.java.s3.version>
     </properties>
 
     <dependencyManagement>
@@ -34,6 +35,11 @@
     </dependencyManagement>
 
     <dependencies>
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>s3</artifactId>
+            <version>${aws.java.s3.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-webmvc</artifactId>

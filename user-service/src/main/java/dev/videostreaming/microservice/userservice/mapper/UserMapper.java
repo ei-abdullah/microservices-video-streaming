@@ -2,6 +2,7 @@ package dev.videostreaming.microservice.userservice.mapper;
 
 import common.Role;
 import common.dto.CreateUserResponse;
+import dev.videostreaming.microservice.userservice.User;
 import dev.videostreaming.microservice.userservice.dto.request.CreateUserRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

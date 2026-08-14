@@ -1,5 +1,29 @@
+aws:
+  region: ap-south-1
+  s3:
+    bucket-name: distributed-video-streaming-bucket
+
 spring:
   application:
     name: media-service
 
+  datasource:
+    url: jdbc:postgresql://localhost:5433/media_db
+    username: abdullah
+    password: admin
+    driver-class-name: org.postgresql.Driver
 
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    database: postgresql
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+
+server:
+  port: 8300
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8761/eureka/

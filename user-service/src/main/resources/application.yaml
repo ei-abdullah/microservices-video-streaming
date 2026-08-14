@@ -3,7 +3,6 @@ security:
     secret-key: iuv1UjVJkuKs3BNgEOr0Vqie9Ubd3997P1YZ3U09wHA=
     filter-enabled: true
 
-
 spring:
   application:
     name: user-service
