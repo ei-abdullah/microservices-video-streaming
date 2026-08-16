@@ -1,5 +1,6 @@
 package common.jwt;
 
+import common.Role;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -11,6 +12,7 @@ import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -20,14 +22,20 @@ public class JwtService {
     @Value("${security.jwt.secret-key}")
     private String SECRET_KEY;
 
-    public String generateToken(String userEmail) {
+    public String generateToken(
+            String id,
+            String email,
+            List<Role> roles
+    ) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("id", id);
+        claims.put("roles", roles);
 
         return Jwts
                 .builder()
                 .claims()
                 .add(claims)
-                .subject(userEmail)
+                .subject(email)
                 .issuedAt(new Date(System.currentTimeMillis()))
                 .expiration(new Date(System.currentTimeMillis() + 1000L * 60 * 30)) // 30 mins
                 .and()

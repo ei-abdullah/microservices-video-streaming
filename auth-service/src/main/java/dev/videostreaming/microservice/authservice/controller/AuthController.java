@@ -1,6 +1,5 @@
 package dev.videostreaming.microservice.authservice.controller;
 
-import common.htmlPage.HtmlPageService;
 import dev.videostreaming.microservice.authservice.dto.request.LoginRequest;
 import dev.videostreaming.microservice.authservice.dto.request.SignupRequest;
 import dev.videostreaming.microservice.authservice.dto.response.LoginResponse;
@@ -38,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<LoginResponse> signup(
+    public ResponseEntity<LoginResponse> login(
             @Valid @NotNull @RequestBody LoginRequest request
     ) {
         LoginResponse response = authService.login(request);
