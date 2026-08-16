@@ -1,9 +1,12 @@
 package dev.videostreaming.microservice.authservice.service;
 
 import common.dto.GetUserByEmailResponse;
+import common.exception.NotFoundException;
+import dev.videostreaming.microservice.authservice.RemoteUserPrincipal;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.jspecify.annotations.Nullable;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -25,15 +28,15 @@ public class RemoteUserDetailsService implements UserDetailsService {
                 email
         );
 
-        return User
-                .withUsername(response.email())
-                .password(response.password())
-                .roles(response
-                        .roles()
-                        .stream()
-                        .map(Enum::name)
-                        .toArray(String[]::new)
-                )
-                .build();
+        if (response == null) {
+            throw new NotFoundException("User not found");
+        }
+
+        return new RemoteUserPrincipal(
+                response.id(),
+                response.email(),
+                response.password(),
+                response.roles()
+        );
     }
 }

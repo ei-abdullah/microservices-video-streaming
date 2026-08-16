@@ -7,6 +7,7 @@ import common.dto.NotificationEvent;
 import common.exception.ConflictException;
 import common.exception.NotFoundException;
 import dev.videostreaming.microservice.userservice.User;
+import dev.videostreaming.microservice.userservice.dto.response.MeResponse;
 import dev.videostreaming.microservice.userservice.mapper.UserMapper;
 import dev.videostreaming.microservice.userservice.dto.request.CreateUserRequest;
 import dev.videostreaming.microservice.userservice.repository.UserRepository;
@@ -31,6 +32,7 @@ public class UserService {
     public GetUserByEmailResponse getUserByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(user -> new GetUserByEmailResponse(
+                        user.getId(),
                         user.getEmail(),
                         user.getPassword(),
                         user.getRoles()
@@ -89,4 +91,16 @@ public class UserService {
         userRepository.save(user);
     }
 
+    public MeResponse me(String email) {
+        return userRepository.findByEmail(email)
+                .map(user -> new MeResponse(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getRoles(),
+                        user.getIsVerified(),
+                        user.getCreatedAt(),
+                        user.getUpdatedAt()
+                ))
+                .orElseThrow(()-> new NotFoundException("User not found"));
+    }
 }

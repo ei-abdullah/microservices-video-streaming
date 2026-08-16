@@ -4,13 +4,16 @@ package dev.videostreaming.microservice.userservice.controller;
 import common.dto.CreateUserResponse;
 import common.dto.GetUserByEmailResponse;
 import common.htmlPage.HtmlPageService;
+import dev.videostreaming.microservice.userservice.UserPrincipal;
 import dev.videostreaming.microservice.userservice.dto.request.CreateUserRequest;
+import dev.videostreaming.microservice.userservice.dto.response.MeResponse;
 import dev.videostreaming.microservice.userservice.service.UserService;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 @RequestMapping("/api/v1/user")
 public class UserController {
-
     private final UserService userService;
     private final HtmlPageService htmlPageService;
 
@@ -77,7 +79,13 @@ public class UserController {
     }
 
     @GetMapping("/me")
-    public ResponseEntity<?> getMe() {
-        return ResponseEntity.ok().build();
+    public ResponseEntity<MeResponse> getMe(
+            @AuthenticationPrincipal UserPrincipal user
+            ) {
+        MeResponse response = userService.me(user.getUsername());
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 }

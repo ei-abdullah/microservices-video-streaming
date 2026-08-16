@@ -3,6 +3,7 @@ package common.config;
 import common.htmlPage.HtmlPageService;
 import common.jwt.JwtFilter;
 import common.jwt.JwtService;
+import common.s3.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
@@ -15,6 +16,11 @@ import org.springframework.web.client.RestTemplate;
 
 @Configuration
 public class CommonAutoConfiguration {
+    @Bean
+    public S3Service s3Service() {
+        return new S3Service();
+    }
+
     @Bean
     public JwtService jwtService() {
         return new JwtService();

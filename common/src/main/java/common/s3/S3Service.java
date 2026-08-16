@@ -1,7 +1,5 @@
 package common.s3;
 
-import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.internal.sync.FileContentStreamProvider;
 import software.amazon.awssdk.http.*;
@@ -19,12 +17,8 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.Map;
 
-
 @Service
-@RequiredArgsConstructor
 public class S3Service {
-
-    private final Logger logger;
 
     public String createPresignedUrl(
             String bucketName,
@@ -47,9 +41,6 @@ public class S3Service {
 
             PresignedPutObjectRequest presignedRequest = presigner
                     .presignPutObject(presignRequest);
-
-            logger.info("Presigned URL: {}", presignedRequest.url().toString());
-            logger.info("HTTP method: {}", presignedRequest.httpRequest().method());
 
             return presignedRequest.url().toExternalForm();
         }
@@ -83,10 +74,9 @@ public class S3Service {
                 HttpExecuteResponse response = sdkHttpClient
                         .prepareRequest(executeRequest)
                         .call();
-                logger.info("Response code: {}", response.httpResponse().statusCode());
             }
         } catch (IOException | URISyntaxException e) {
-            logger.error("Error uploading file: {}", e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 }
