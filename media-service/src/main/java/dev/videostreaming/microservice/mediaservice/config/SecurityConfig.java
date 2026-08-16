@@ -1,7 +1,6 @@
 package dev.videostreaming.microservice.mediaservice.config;
 
 import common.jwt.JwtFilter;
-import common.jwt.JwtService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,6 +24,8 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
+                        .requestMatchers("/api/v1/media/**")
+                        .hasAuthority("USER_VERIFIED")
                         .anyRequest()
                         .authenticated()
                 )

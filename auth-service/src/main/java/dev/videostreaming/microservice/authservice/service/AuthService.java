@@ -5,7 +5,7 @@ import common.dto.CreateUserResponse;
 import common.exception.BadRequestException;
 import common.exception.NotFoundException;
 import common.jwt.JwtService;
-import dev.videostreaming.microservice.authservice.RemoteUserPrincipal;
+import common.userDetails.RemoteUserPrincipal;
 import dev.videostreaming.microservice.authservice.dto.request.LoginRequest;
 import dev.videostreaming.microservice.authservice.dto.request.SignupRequest;
 import dev.videostreaming.microservice.authservice.dto.response.LoginResponse;
@@ -64,7 +64,8 @@ public class AuthService {
         String token = jwtService.generateToken(
                 user.id(),
                 user.email(),
-                user.roles()
+                user.roles(),
+                user.isVerified()
         );
 
         return authMapper.toSignup(
@@ -94,7 +95,8 @@ public class AuthService {
         String token = jwtService.generateToken(
                 principal.getId(),
                 principal.getUsername(),
-                principal.getRoles()
+                principal.getRoles(),
+                principal.getIsVerified()
         );
 
         return new LoginResponse(token);

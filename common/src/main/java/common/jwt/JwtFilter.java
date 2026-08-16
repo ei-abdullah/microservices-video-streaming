@@ -7,13 +7,19 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 
 @RequiredArgsConstructor
 public class JwtFilter extends OncePerRequestFilter {
@@ -36,23 +42,47 @@ public class JwtFilter extends OncePerRequestFilter {
 
         String token = authHeader.substring(7);
         String email;
+        Boolean isVerified;
 
         try {
             email = jwtService.extractEmail(token);
+            isVerified = jwtService.extractIsVerified(token);
+
         } catch (Exception e) {
+            SecurityContextHolder.clearContext();
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid Jwt Token");
             filterChain.doFilter(request, response);
             return;
         }
 
         if (email != null && SecurityContextHolder.getContext().getAuthentication() == null) {
-            UserDetails userDetails = this.userDetailsService.loadUserByUsername(email);
+            UserDetails userDetails;
+
+            try {
+                userDetails = this.userDetailsService.loadUserByUsername(email);
+            } catch (UsernameNotFoundException e) {
+                SecurityContextHolder.clearContext();
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid Jwt Token");
+                filterChain.doFilter(request, response);
+                return;
+            }
 
             if (jwtService.validateToken(token, userDetails)) {
+                List<GrantedAuthority> authorities = new ArrayList<>(userDetails.getAuthorities());
+                if (Boolean.TRUE.equals(isVerified)) {
+                    authorities.add(new SimpleGrantedAuthority("USER_VERIFIED"));
+                }
+
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities()
+                        userDetails, null, authorities
                 );
                 authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authentication);
+            } else {
+                SecurityContextHolder.clearContext();
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid Jwt Token");
+                filterChain.doFilter(request, response);
+                return;
             }
         }
 

@@ -1,4 +1,4 @@
-package dev.videostreaming.microservice.authservice;
+package common.userDetails;
 
 import common.Role;
 import lombok.Getter;
@@ -10,6 +10,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.List;
 
+
 @Getter
 @RequiredArgsConstructor
 public class RemoteUserPrincipal implements UserDetails {
@@ -17,7 +18,7 @@ public class RemoteUserPrincipal implements UserDetails {
     private final String email;
     private final String password;
     private final List<Role> roles;
-
+    private final Boolean isVerified;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -54,6 +55,6 @@ public class RemoteUserPrincipal implements UserDetails {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return isVerified;
     }
 }

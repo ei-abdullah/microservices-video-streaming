@@ -8,7 +8,6 @@ security:
     secret-key: iuv1UjVJkuKs3BNgEOr0Vqie9Ubd3997P1YZ3U09wHA=
     filter-enabled: true
 
-
 spring:
   application:
     name: media-service
@@ -33,3 +32,7 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8761/eureka/
+
+logging:
+  level:
+    org.springframework.security: TRACE

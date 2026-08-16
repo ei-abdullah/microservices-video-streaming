@@ -8,6 +8,7 @@ public record GetUserByEmailResponse(
         String id,
         String email,
         String password,
-        List<Role> roles
+        List<Role> roles,
+        Boolean isVerified
 ) {
 }
