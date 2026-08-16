@@ -25,11 +25,13 @@ public class JwtService {
     public String generateToken(
             String id,
             String email,
-            List<Role> roles
+            List<Role> roles,
+            Boolean isVerified
     ) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", id);
         claims.put("roles", roles);
+        claims.put("isVerified", isVerified);
 
         return Jwts
                 .builder()
@@ -50,6 +52,13 @@ public class JwtService {
 
     public String extractEmail(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    public Boolean extractIsVerified(String token) {
+        return extractClaim(token, claim -> {
+            Object value = claim.get("isVerified");
+            return value != null && (Boolean) value;
+        });
     }
 
     private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
@@ -82,4 +91,6 @@ public class JwtService {
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     }
+
+
 }

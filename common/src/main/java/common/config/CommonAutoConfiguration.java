@@ -4,7 +4,8 @@ import common.htmlPage.HtmlPageService;
 import common.jwt.JwtFilter;
 import common.jwt.JwtService;
 import common.s3.S3Service;
-import lombok.RequiredArgsConstructor;
+import common.userDetails.RemoteUserDetailsService;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +14,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
+
 
 @Configuration
 public class CommonAutoConfiguration {
@@ -38,6 +40,12 @@ public class CommonAutoConfiguration {
             UserDetailsService userDetailsService
     ) {
         return new JwtFilter(jwtService, userDetailsService);
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(UserDetailsService.class)
+    public UserDetailsService remoteUserDetailsService(RestTemplate restTemplate) {
+        return new RemoteUserDetailsService(restTemplate);
     }
 
     @Bean
