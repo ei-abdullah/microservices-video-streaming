@@ -1,15 +1,13 @@
 package dev.videostreaming.microservice.mediaservice.controller;
 
-import common.s3.S3Service;
+import common.userDetails.RemoteUserPrincipal;
+import dev.videostreaming.microservice.mediaservice.dto.response.CreateUploadResponse;
 import dev.videostreaming.microservice.mediaservice.service.MediaService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Validated
 @RestController
@@ -19,12 +17,18 @@ public class MediaController {
 
     private final MediaService mediaService;
 
-    @GetMapping("/getUploadUrl")
-    public ResponseEntity<String> getUploadUrl() {
-        String response = mediaService.getUploadUrl();
+    @PostMapping("/")
+    public ResponseEntity<CreateUploadResponse> createUpload(
+            @AuthenticationPrincipal RemoteUserPrincipal user
+    ) {
+        CreateUploadResponse response = mediaService.createUpload(user);
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return null;
     }
+
+    @PostMapping("/{mediaId}/complete")
+    public ResponseEntity<?> completeMediaUpload(@PathVariable String mediaId) {
+        return null;
+    }
+
 }
