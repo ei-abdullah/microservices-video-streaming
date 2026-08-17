@@ -1,6 +1,7 @@
 package dev.videostreaming.microservice.mediaservice;
 
 import common.config.CommonAutoConfiguration;
+import common.config.UtilsConfig;
 import common.s3.S3Service;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -10,7 +11,7 @@ import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
 @EnableConfigurationProperties
-@Import({S3Service.class, CommonAutoConfiguration.class})
+@Import({S3Service.class, CommonAutoConfiguration.class, UtilsConfig.class})
 public class MediaServiceApplication {
 
 	public static void main(String[] args) {

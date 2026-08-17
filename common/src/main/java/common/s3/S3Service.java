@@ -2,6 +2,7 @@ package common.s3;
 
 import org.springframework.stereotype.Service;
 import software.amazon.awssdk.core.internal.sync.FileContentStreamProvider;
+import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.http.*;
 import software.amazon.awssdk.http.apache.ApacheHttpClient;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
@@ -11,6 +12,7 @@ import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignReques
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
@@ -49,12 +51,14 @@ public class S3Service {
 
     public void uploadFile(
             String preSignedUrlString,
-            File file,
+            InputStream inputStream,
+            long contentLength,
             Map<String, String> metadata
     ) {
         try {
             URL presignedUrl = new URI(preSignedUrlString).toURL();
 
+            System.out.println("PresignedUrl for PUT upload " + presignedUrl);
             SdkHttpRequest.Builder requestBuilder = SdkHttpRequest
                     .builder()
                     .method(SdkHttpMethod.PUT)
@@ -67,15 +71,17 @@ public class S3Service {
             HttpExecuteRequest executeRequest = HttpExecuteRequest
                     .builder()
                     .request(request)
-                    .contentStreamProvider(new FileContentStreamProvider(file.toPath()))
+                    .contentStreamProvider(RequestBody.fromInputStream(inputStream, contentLength).contentStreamProvider())
                     .build();
 
             try (SdkHttpClient sdkHttpClient = ApacheHttpClient.create()) {
-                HttpExecuteResponse response = sdkHttpClient
-                        .prepareRequest(executeRequest)
-                        .call();
+                System.out.println("Sending PUT request to S3");
+                sdkHttpClient.prepareRequest(executeRequest).call();
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
             }
         } catch (IOException | URISyntaxException e) {
+            System.out.println(e.getMessage());
             throw new RuntimeException(e);
         }
     }

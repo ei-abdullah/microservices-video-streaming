@@ -3,6 +3,7 @@ package common.config;
 import common.htmlPage.HtmlPageService;
 import common.jwt.JwtFilter;
 import common.jwt.JwtService;
+import common.s3.S3Bucket;
 import common.s3.S3Service;
 import common.userDetails.RemoteUserDetailsService;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -21,6 +22,12 @@ public class CommonAutoConfiguration {
     @Bean
     public S3Service s3Service() {
         return new S3Service();
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "aws.s3", name = "bucket-name")
+    public S3Bucket s3Bucket() {
+        return new S3Bucket();
     }
 
     @Bean
