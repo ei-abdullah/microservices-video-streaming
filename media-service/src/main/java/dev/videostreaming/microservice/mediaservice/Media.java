@@ -36,6 +36,9 @@ public class Media {
 
     private String sourceObjectKey;
 
+    // For now, it'll be one processed
+    // but expandable to various processed formats later on.
+    // and it'll be a separate entity
     private String processedObjectKey;
 
     @Enumerated(EnumType.STRING)

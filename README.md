@@ -16,6 +16,7 @@
 - 8100 - `notification-service`
 - 8200 - `auth-service`
 - 8300 - `media-service`
+- 8400 - `transcoding-service`
 
 ### Future
 - Complete the envs e.g. `DATABASE_URL`, `RABBITMQ_HOST`, `RABBITMQ_PORT` etc.
