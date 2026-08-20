@@ -33,12 +33,6 @@ public class CommonAutoConfiguration {
     }
 
     @Bean
-    @ConditionalOnProperty(prefix = "aws.s3", name = "bucket-name")
-    public S3Bucket s3Bucket() {
-        return new S3Bucket();
-    }
-
-    @Bean
     public JwtService jwtService() {
         return new JwtService();
     }
