@@ -18,6 +18,7 @@
         <module>auth-service</module>
         <module>notification-service</module>
         <module>media-service</module>
+        <module>transcoding-service</module>
     </modules>
 
     <properties>

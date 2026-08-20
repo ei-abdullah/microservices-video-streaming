@@ -15,13 +15,15 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.client.RestTemplate;
+import software.amazon.awssdk.services.s3.S3Client;
+
 
 
 @Configuration
 public class CommonAutoConfiguration {
     @Bean
-    public S3Service s3Service() {
-        return new S3Service();
+    public S3Service s3Service(S3Client s3Client) {
+        return new S3Service(s3Client);
     }
 
     @Bean
@@ -59,6 +61,11 @@ public class CommonAutoConfiguration {
     @LoadBalanced
     public RestTemplate restTemplate() {
         return new RestTemplate();
+    }
+
+    @Bean
+    public S3Client s3Client() {
+        return S3Client.create();
     }
 
     @Bean

@@ -2,7 +2,7 @@ package common;
 
 
 public class Utils {
-    public String GetUploadMediaKey(String userId, String mediaId) {
-        return "media/%s/%s".formatted(userId, mediaId);
+    public String getRawMediaKey(String userId, String mediaId) {
+        return "/raw-media/%s/%s".formatted(userId, mediaId);
     }
 }

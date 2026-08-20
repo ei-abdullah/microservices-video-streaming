@@ -1,9 +1,11 @@
 package dev.videostreaming.microservice.mediaservice.controller;
 
 import common.userDetails.RemoteUserPrincipal;
+import dev.videostreaming.microservice.mediaservice.dto.response.CompleteMediaUploadResponse;
 import dev.videostreaming.microservice.mediaservice.dto.response.CreateUploadResponse;
 import dev.videostreaming.microservice.mediaservice.service.MediaService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
@@ -23,12 +25,18 @@ public class MediaController {
     ) {
         CreateUploadResponse response = mediaService.createUpload(user);
 
-        return null;
+        return ResponseEntity
+                .status(HttpStatus.CREATED)
+                .body(response);
     }
 
     @PostMapping("/{mediaId}/complete")
     public ResponseEntity<?> completeMediaUpload(@PathVariable String mediaId) {
-        return null;
+        CompleteMediaUploadResponse response = mediaService.completeMediaUpload(mediaId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
     }
 
 }

@@ -1,16 +1,19 @@
 package common.s3;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import software.amazon.awssdk.core.internal.sync.FileContentStreamProvider;
 import software.amazon.awssdk.core.sync.RequestBody;
 import software.amazon.awssdk.http.*;
 import software.amazon.awssdk.http.apache.ApacheHttpClient;
+import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.model.HeadObjectRequest;
+import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
+import software.amazon.awssdk.services.s3.model.NoSuchKeyException;
 import software.amazon.awssdk.services.s3.model.PutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 import software.amazon.awssdk.services.s3.presigner.model.PresignedPutObjectRequest;
 import software.amazon.awssdk.services.s3.presigner.model.PutObjectPresignRequest;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -18,9 +21,13 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.time.Duration;
 import java.util.Map;
+import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class S3Service {
+
+    private final S3Client s3Client;
 
     public String createPresignedUrl(
             String bucketName,
@@ -46,7 +53,20 @@ public class S3Service {
 
             return presignedRequest.url().toExternalForm();
         }
+    }
 
+    public Optional<HeadObjectResponse> getFileMetaData(String bucketName, String key) {
+        try {
+            HeadObjectRequest headObjectRequest = HeadObjectRequest
+                    .builder()
+                    .bucket(bucketName)
+                    .key(key)
+                    .build();
+
+            return Optional.of(s3Client.headObject(headObjectRequest));
+        } catch(NoSuchKeyException e) {
+            return Optional.empty();
+        }
     }
 
     public void uploadFile(
