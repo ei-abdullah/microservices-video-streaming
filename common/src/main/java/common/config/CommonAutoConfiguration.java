@@ -18,11 +18,18 @@ import org.springframework.web.client.RestTemplate;
 import software.amazon.awssdk.services.s3.S3Client;
 
 
+
 @Configuration
 public class CommonAutoConfiguration {
     @Bean
     public S3Service s3Service(S3Client s3Client) {
         return new S3Service(s3Client);
+    }
+
+    @Bean
+    @ConditionalOnProperty(prefix = "aws.s3", name = "bucket-name")
+    public S3Bucket s3Bucket() {
+        return new S3Bucket();
     }
 
     @Bean
