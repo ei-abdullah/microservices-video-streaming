@@ -11,7 +11,6 @@
 ### Port numbers
 - 8080 - `api-gateway`
 - 8761 - `naming-server`
-- 8081 - `user-service`
 - 8000 - `user-service`
 - 8100 - `notification-service`
 - 8200 - `auth-service`

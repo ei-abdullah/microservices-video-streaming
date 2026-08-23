@@ -28,6 +28,10 @@ spring:
 server:
   port: 8000
 
+app:
+  html-page:
+    enabled: true
+
 eureka:
   client:
     serviceUrl:
