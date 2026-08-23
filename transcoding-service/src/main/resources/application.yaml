@@ -1,4 +1,11 @@
+aws:
+  region: ap-south-1
+  s3:
+    bucket-name: distributed-video-streaming-bucket
+
 spring:
+  main:
+    web-application-type: none  # Prevent tomcat server from starting
   application:
     name: transcoding-service
   rabbitmq:

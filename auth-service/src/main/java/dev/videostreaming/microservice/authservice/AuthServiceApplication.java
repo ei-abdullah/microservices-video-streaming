@@ -1,12 +1,13 @@
 package dev.videostreaming.microservice.authservice;
 
-import common.config.CommonAutoConfiguration;
+import common.config.CommonWebAutoConfiguration;
+import common.config.JwtSecurityAutoConfiguration;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Import;
 
 @SpringBootApplication
-@Import(CommonAutoConfiguration.class)
+@Import({CommonWebAutoConfiguration.class, JwtSecurityAutoConfiguration.class})
 public class AuthServiceApplication {
 
 	public static void main(String[] args) {
