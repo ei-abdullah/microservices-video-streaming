@@ -3,19 +3,24 @@ aws:
   s3:
     bucket-name: distributed-video-streaming-bucket
 
+
 spring:
   main:
     web-application-type: none  # Prevent tomcat server from starting
+
   application:
     name: transcoding-service
+
   rabbitmq:
     host: localhost
     port: 5672
     username: guest
     password: guest
 
+
 server:
   port: 8400
+
 
 eureka:
   client:

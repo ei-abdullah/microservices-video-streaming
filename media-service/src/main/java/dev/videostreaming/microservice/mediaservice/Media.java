@@ -30,25 +30,20 @@ public class Media {
 
     private BigDecimal fileSize;
 
-    private String fileExtension;
-
     private String sourceBucketName;
 
     private String sourceObjectKey;
 
-    // For now, it'll be one processed
-    // but expandable to various processed formats later on.
-    // and it'll be a separate entity
-    private String processedObjectKey;
+    private String masterPlaylistKey;
 
     @Enumerated(EnumType.STRING)
     private MediaStatus status;
 
-    private BigDecimal duration;
+    private Double duration;
 
-    private BigDecimal width;
+    private Integer width;
 
-    private BigDecimal height;
+    private Integer height;
 
     private String failureReason;
 

@@ -1,20 +1,20 @@
-package dev.videostreaming.microservice.transcodingservice.config;
+package dev.videostreaming.microservice.mediaservice.config;
 
-import common.constant.TranscodingConstant;
+import common.constant.MediaConstant;
+import org.springframework.amqp.core.*;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.amqp.core.*;
 
 @Configuration
 public class RabbitMqConfig {
     @Bean
     public Queue queue() {
-        return new Queue(TranscodingConstant.QUEUE, true);
+        return new Queue(MediaConstant.QUEUE, true);
     }
 
     @Bean
     public Exchange exchange() {
-        return new TopicExchange(TranscodingConstant.EXCHANGE);
+        return new TopicExchange(MediaConstant.EXCHANGE);
     }
 
     @Bean
@@ -22,7 +22,7 @@ public class RabbitMqConfig {
         return BindingBuilder
                 .bind(queue)
                 .to(exchange)
-                .with(TranscodingConstant.ROUTING_KEY)
+                .with(MediaConstant.ROUTING_KEY)
                 .noargs();
     }
 }

@@ -1,14 +1,15 @@
 package dev.videostreaming.microservice.mediaservice.service;
 
 import common.Utils;
+import common.constant.MediaConstant;
 import common.constant.TranscodingConstant;
+import common.dto.MediaMetadata;
 import common.dto.TranscodingEvent;
 import common.exception.NotFoundException;
 import common.s3.S3Bucket;
 import common.s3.S3Service;
 import common.userDetails.RemoteUserPrincipal;
 import dev.videostreaming.microservice.mediaservice.Media;
-import dev.videostreaming.microservice.mediaservice.MediaConstants;
 import dev.videostreaming.microservice.mediaservice.MediaStatus;
 import dev.videostreaming.microservice.mediaservice.dto.response.CompleteMediaUploadResponse;
 import dev.videostreaming.microservice.mediaservice.dto.response.CreateUploadResponse;
@@ -34,6 +35,7 @@ public class MediaService {
     private final S3Service s3Service;
     private final S3Bucket s3Bucket;
     private final Utils utils;
+
 
     @Transactional
     public CreateUploadResponse createUpload(RemoteUserPrincipal user) {
@@ -82,7 +84,7 @@ public class MediaService {
         );
 
         if (objectResponse.isEmpty()) {
-            media.setFailureReason(MediaConstants.S3_ERROR);
+            media.setFailureReason(MediaConstant.S3_ERROR);
             media.setStatus(MediaStatus.FAILED);
             media.setUpdatedAt(Instant.now());
             mediaRepository.save(media);
@@ -90,7 +92,7 @@ public class MediaService {
             return new CompleteMediaUploadResponse(
                     media.getId(),
                     "",
-                    MediaConstants.S3_ERROR,
+                    MediaConstant.S3_ERROR,
                     MediaStatus.FAILED.toString(),
                     media.getCreatedAt(),
                     media.getUpdatedAt()
@@ -126,7 +128,7 @@ public class MediaService {
             );
         } catch (Exception e) {
             media.setStatus(MediaStatus.FAILED);
-            media.setFailureReason(MediaConstants.QUEUE_FAILED);
+            media.setFailureReason(MediaConstant.QUEUE_FAILED);
             media.setUpdatedAt(Instant.now());
             mediaRepository.save(media);
 
@@ -148,5 +150,34 @@ public class MediaService {
                 media.getCreatedAt(),
                 media.getUpdatedAt()
         );
+    }
+
+    public void updateMediaStatus(
+            String mediaId,
+            String masterPlaylistKey,
+            String bucketName,
+            String status,
+            String failureReason,
+            MediaMetadata metadata
+    ) {
+        Media media = mediaRepository.findById(mediaId)
+                .orElseThrow(() -> new NotFoundException("Media file with id" + mediaId + " not found!"));
+
+        if (status.equals(MediaConstant.MEDIA_FAILED)) {
+            media.setSourceBucketName(bucketName);
+            media.setStatus(MediaStatus.FAILED);
+            media.setFailureReason(failureReason);
+            media.setUpdatedAt(Instant.now());
+            mediaRepository.save(media);
+            return;
+        }
+
+        media.setStatus(MediaStatus.READY);
+        media.setMasterPlaylistKey(masterPlaylistKey);
+        media.setDuration(metadata.duration());
+        media.setWidth(metadata.width());
+        media.setHeight(metadata.height());
+        media.setUpdatedAt(Instant.now());
+        mediaRepository.save(media);
     }
 }
