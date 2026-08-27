@@ -2,12 +2,14 @@ package dev.videostreaming.microservice.transcodingservice.consumer;
 
 import common.constant.TranscodingConstant;
 import common.dto.TranscodingEvent;
+import common.exception.ServerException;
 import dev.videostreaming.microservice.transcodingservice.service.TranscodingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
+
 
 @Component
 @RequiredArgsConstructor
@@ -28,7 +30,7 @@ public class TranscodingConsumer {
                 break;
 
             default:
-                System.out.println("Unknown event: " + event.eventName());
+                throw new ServerException("Unknown event: " + event.eventName());
         }
     }
 }
