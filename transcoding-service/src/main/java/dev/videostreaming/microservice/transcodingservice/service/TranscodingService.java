@@ -2,6 +2,7 @@ package dev.videostreaming.microservice.transcodingservice.service;
 
 import common.constant.MediaConstant;
 import common.dto.MediaEvent;
+import common.dto.MediaEventMap;
 import common.dto.MediaMetadata;
 import common.exception.ServerException;
 import common.s3.S3Service;
@@ -53,13 +54,13 @@ public class TranscodingService {
                     MediaConstant.ROUTING_KEY_READY_MEDIA,
                     new MediaEvent(
                             MediaConstant.EVENT_READY_MEDIA,
-                            Map.of(
-                                    "mediaId", mediaId,
-                                    "masterPlaylistKey", masterPlaylistKey,
-                                    "bucketName", bucketName,
-                                    "status", MediaConstant.MEDIA_READY,
-                                    "failureReason", "",
-                                    "metadata", metadata
+                            new MediaEventMap(
+                                    mediaId,
+                                    masterPlaylistKey,
+                                    bucketName,
+                                    MediaConstant.MEDIA_READY,
+                                    "",
+                                    metadata
                             )
                     )
             );
@@ -71,19 +72,17 @@ public class TranscodingService {
                     MediaConstant.ROUTING_KEY_FAILED_MEDIA,
                     new MediaEvent(
                             MediaConstant.EVENT_FAILED_MEDIA,
-                            Map.of(
-                                    "mediaId", mediaId,
-                                    "masterPlaylistKey", "",
-                                    "bucketName", bucketName,
-                                    "status", MediaConstant.MEDIA_FAILED,
-                                    "failureReason", e.getMessage(),
-                                    "metadata", metadata
+                            new MediaEventMap(
+                                    mediaId,
+                                    "",
+                                    bucketName,
+                                    MediaConstant.MEDIA_FAILED,
+                                    e.getMessage(),
+                                    metadata
                             )
                     )
             );
             log.error("Transcoding failed for mediaId: {}", mediaId, e);
-
-            throw new ServerException("Transcoding failed for mediaId: " + mediaId);
         } finally {
             cleanupTempDir(tempDir);
         }
@@ -130,7 +129,7 @@ public class TranscodingService {
         ProcessBuilder processBuilder = new ProcessBuilder(
                 "ffprobe",
                 "-v", "quiet",
-                "-select_stream", "v:0",
+                "-select_streams", "v:0",
                 "-show_entries", "stream=width,height,duration",
                 "-of", "json",
                 inputVideo.toAbsolutePath().toString()
