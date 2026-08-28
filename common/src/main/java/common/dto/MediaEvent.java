@@ -5,6 +5,6 @@ import java.util.Map;
 
 public record MediaEvent(
         String eventName,
-        Map<String, Object> vars
+        MediaEventMap mediaEventMap
 ) implements Serializable {
 }
