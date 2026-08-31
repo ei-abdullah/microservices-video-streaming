@@ -22,36 +22,40 @@ import java.time.Duration;
 import java.util.Map;
 import java.util.Optional;
 
+
 @Service
 @RequiredArgsConstructor
 public class S3Service {
 
     private final S3Client s3Client;
+    private final S3Presigner s3Presigner;
 
     public String createPresignedUrl(
             String bucketName,
             String keyName,
             Map<String, String> metadata
     ) {
-        try (S3Presigner presigner = S3Presigner.create()) {
-            PutObjectRequest putObjectRequest = PutObjectRequest
-                    .builder()
-                    .bucket(bucketName)
-                    .key(keyName)
-                    .metadata(metadata)
-                    .build();
+        PutObjectRequest.Builder putObjectRequestBuilder = PutObjectRequest
+                .builder()
+                .bucket(bucketName)
+                .key(keyName);
 
-            PutObjectPresignRequest presignRequest = PutObjectPresignRequest
-                    .builder()
-                    .putObjectRequest(putObjectRequest)
-                    .signatureDuration(Duration.ofMinutes(10))
-                    .build();
-
-            PresignedPutObjectRequest presignedRequest = presigner
-                    .presignPutObject(presignRequest);
-
-            return presignedRequest.url().toExternalForm();
+        if (metadata != null && !metadata.isEmpty()) {
+            putObjectRequestBuilder.metadata(metadata);
         }
+
+        PutObjectRequest putObjectRequest = putObjectRequestBuilder.build();
+
+        PutObjectPresignRequest presignRequest = PutObjectPresignRequest
+                .builder()
+                .putObjectRequest(putObjectRequest)
+                .signatureDuration(Duration.ofMinutes(10))
+                .build();
+
+        PresignedPutObjectRequest presignedRequest = s3Presigner
+                .presignPutObject(presignRequest);
+
+        return presignedRequest.url().toExternalForm();
     }
 
     public Optional<HeadObjectResponse> getFileMetaData(String bucketName, String key) {

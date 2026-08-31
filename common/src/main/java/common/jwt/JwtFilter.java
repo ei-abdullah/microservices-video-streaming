@@ -60,7 +60,7 @@ public class JwtFilter extends OncePerRequestFilter {
 
             try {
                 userDetails = this.userDetailsService.loadUserByUsername(email);
-            } catch (UsernameNotFoundException e) {
+            } catch (Exception e) {
                 SecurityContextHolder.clearContext();
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED,"Invalid Jwt Token");
                 filterChain.doFilter(request, response);
