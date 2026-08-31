@@ -1,0 +1,12 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="microservices-compound" type="CompoundRunConfigurationType">
+    <toRun name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" />
+    <toRun name="AuthServiceApplication" type="SpringBootApplicationConfigurationType" />
+    <toRun name="MediaServiceApplication" type="SpringBootApplicationConfigurationType" />
+    <toRun name="NamingServerApplication" type="SpringBootApplicationConfigurationType" />
+    <toRun name="NotificationServiceApplication" type="SpringBootApplicationConfigurationType" />
+    <toRun name="TranscodingServiceApplication" type="SpringBootApplicationConfigurationType" />
+    <toRun name="UserServiceApplication" type="SpringBootApplicationConfigurationType" />
+    <method v="2" />
+  </configuration>
+</component>

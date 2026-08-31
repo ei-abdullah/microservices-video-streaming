@@ -8,6 +8,7 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import software.amazon.awssdk.services.s3.S3Client;
+import software.amazon.awssdk.services.s3.presigner.S3Presigner;
 
 
 @Configuration
@@ -16,8 +17,14 @@ import software.amazon.awssdk.services.s3.S3Client;
 public class AwsS3AutoConfiguration {
     @Bean
     @ConditionalOnMissingBean
-    public S3Service s3Service(S3Client s3Client) {
-        return new S3Service(s3Client);
+    public S3Service s3Service(
+            S3Client s3Client,
+            S3Presigner s3Presigner
+    ) {
+        return new S3Service(
+                s3Client,
+                s3Presigner
+        );
     }
 
     @Bean
@@ -30,5 +37,11 @@ public class AwsS3AutoConfiguration {
     @ConditionalOnMissingBean
     public S3Client s3Client() {
         return S3Client.create();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public S3Presigner s3Presigner() {
+        return S3Presigner.create();
     }
 }
