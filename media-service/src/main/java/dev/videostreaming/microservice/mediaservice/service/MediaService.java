@@ -13,6 +13,7 @@ import dev.videostreaming.microservice.mediaservice.Media;
 import dev.videostreaming.microservice.mediaservice.MediaStatus;
 import dev.videostreaming.microservice.mediaservice.dto.response.CompleteMediaUploadResponse;
 import dev.videostreaming.microservice.mediaservice.dto.response.CreateUploadResponse;
+import dev.videostreaming.microservice.mediaservice.dto.response.MediaDetailsResponse;
 import dev.videostreaming.microservice.mediaservice.repository.MediaRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ import software.amazon.awssdk.services.s3.model.HeadObjectResponse;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 
 
@@ -179,5 +181,52 @@ public class MediaService {
         media.setHeight(metadata.height());
         media.setUpdatedAt(Instant.now());
         mediaRepository.save(media);
+    }
+
+    public MediaDetailsResponse getMediaById(String mediaId) {
+        Media media = mediaRepository.findById(mediaId)
+                .orElseThrow(() -> new NotFoundException("Media not found with Id: " + mediaId ));
+
+        return new MediaDetailsResponse(
+                media.getId(),
+                media.getTitle(),
+                media.getStatus().name(),
+                buildPlaybackUrl(media),
+                media.getDuration(),
+                media.getWidth(),
+                media.getHeight(),
+                media.getCreatedAt(),
+                media.getUpdatedAt()
+        );
+    }
+
+    public List<MediaDetailsResponse> getAllMedia() {
+        return mediaRepository
+                .findAll()
+                .stream()
+                .map(media -> new MediaDetailsResponse(
+                        media.getId(),
+                        media.getTitle(),
+                        media.getStatus().name(),
+                        buildPlaybackUrl(media),
+                        media.getDuration(),
+                        media.getWidth(),
+                        media.getHeight(),
+                        media.getCreatedAt(),
+                        media.getUpdatedAt()
+                ))
+                .toList();
+    }
+
+    private String buildPlaybackUrl(Media media) {
+        if (media.getStatus() != MediaStatus.READY || media.getMasterPlaylistKey() == null) {
+            return "";
+        }
+
+        return String.format(
+                "https://%s.s3.amazonaws.com/%s",
+                media.getSourceBucketName(),
+                media.getMasterPlaylistKey()
+        );
     }
 }

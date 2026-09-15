@@ -3,6 +3,7 @@ package dev.videostreaming.microservice.mediaservice.controller;
 import common.userDetails.RemoteUserPrincipal;
 import dev.videostreaming.microservice.mediaservice.dto.response.CompleteMediaUploadResponse;
 import dev.videostreaming.microservice.mediaservice.dto.response.CreateUploadResponse;
+import dev.videostreaming.microservice.mediaservice.dto.response.MediaDetailsResponse;
 import dev.videostreaming.microservice.mediaservice.service.MediaService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -10,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Validated
 @RestController
@@ -19,7 +22,7 @@ public class MediaController {
 
     private final MediaService mediaService;
 
-    @PostMapping("/")
+    @PostMapping
     public ResponseEntity<CreateUploadResponse> createUpload(
             @AuthenticationPrincipal RemoteUserPrincipal user
     ) {
@@ -33,6 +36,24 @@ public class MediaController {
     @PostMapping("/{mediaId}/complete")
     public ResponseEntity<?> completeMediaUpload(@PathVariable String mediaId) {
         CompleteMediaUploadResponse response = mediaService.completeMediaUpload(mediaId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @GetMapping("/{mediaId}")
+    public ResponseEntity<MediaDetailsResponse> getMediaById(@PathVariable String mediaId) {
+        MediaDetailsResponse response = mediaService.getMediaById(mediaId);
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<List<MediaDetailsResponse>> getAllMedia() {
+        List<MediaDetailsResponse> response = mediaService.getAllMedia();
 
         return ResponseEntity
                 .status(HttpStatus.OK)
