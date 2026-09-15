@@ -26,6 +26,16 @@ server:
   port: 8400
 
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, info
+  endpoint:
+    health:
+      show-details: always
+
+
 eureka:
   client:
     serviceUrl:
