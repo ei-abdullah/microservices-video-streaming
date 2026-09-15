@@ -25,6 +25,20 @@ spring:
               predicates:
                 - Path=/api/v1/media/**
 
+          globalcors:
+            cors-configurations:
+              '[/**]':
+                allowed-origins:
+                  - "*"
+                allowed-methods:
+                  - GET
+                  - POST
+                  - PUT
+                  - DELETE
+                  - OPTIONS
+                allowed-headers:
+                  - "*"
+
 
 server:
   port: 8080

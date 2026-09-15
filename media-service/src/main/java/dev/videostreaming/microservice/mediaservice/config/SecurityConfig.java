@@ -4,6 +4,7 @@ import common.jwt.JwtFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -24,10 +25,9 @@ public class SecurityConfig {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/v1/media/**")
-                        .hasAuthority("USER_VERIFIED")
-                        .anyRequest()
-                        .authenticated()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/media/**").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/v1/media/**").hasAuthority("USER_VERIFIED")
+                        .anyRequest().authenticated()
                 )
                 .sessionManagement(s -> s.sessionCreationPolicy(STATELESS))
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class)
