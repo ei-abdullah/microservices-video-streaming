@@ -54,7 +54,9 @@ management:
     web:
       exposure:
         include:
-          - health, info, gateway
+          - health
+          - info
+          - gateway
   endpoint:
     health:
       show-details: always
