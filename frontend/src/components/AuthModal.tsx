@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Lock, Mail, Loader2, AlertCircle } from 'lucide-react';
+import { X, Loader2, AlertCircle } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
 interface AuthModalProps {
@@ -43,91 +43,76 @@ export const AuthModal: React.FC<AuthModalProps> = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/75 p-4 backdrop-blur-sm animate-in fade-in duration-200">
-      <div className="relative w-full max-w-md overflow-hidden rounded-2xl border border-slate-800 bg-slate-900 p-6 shadow-2xl">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+      <div className="relative w-full max-w-sm bg-zinc-950 border border-zinc-800 p-8">
         <button
           onClick={onClose}
-          className="absolute right-4 top-4 rounded-lg p-1.5 text-slate-400 hover:bg-slate-800 hover:text-white transition cursor-pointer"
+          className="absolute right-4 top-4 p-1 text-zinc-500 hover:text-white transition cursor-pointer"
         >
-          <X className="h-5 w-5" />
+          <X className="h-4 w-4" />
         </button>
 
         {/* Tab switcher */}
-        <div className="flex rounded-lg bg-slate-950 p-1 border border-slate-800 mb-6">
+        <div className="flex border-b border-zinc-800 mb-8">
           <button
             type="button"
             onClick={() => { setIsLogin(true); setError(null); }}
-            className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition cursor-pointer ${
-              isLogin ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+            className={`flex-1 pb-3 text-xs font-medium transition cursor-pointer border-b-2 -mb-px ${
+              isLogin ? 'border-white text-white' : 'border-transparent text-zinc-500 hover:text-white'
             }`}
           >
-            Sign In
+            Sign in
           </button>
           <button
             type="button"
             onClick={() => { setIsLogin(false); setError(null); }}
-            className={`flex-1 rounded-md py-1.5 text-xs font-semibold transition cursor-pointer ${
-              !isLogin ? 'bg-indigo-600 text-white shadow-sm' : 'text-slate-400 hover:text-white'
+            className={`flex-1 pb-3 text-xs font-medium transition cursor-pointer border-b-2 -mb-px ${
+              !isLogin ? 'border-white text-white' : 'border-transparent text-zinc-500 hover:text-white'
             }`}
           >
-            Create Account
+            Create account
           </button>
         </div>
 
-        <h2 className="text-xl font-bold text-white">
-          {isLogin ? 'Sign in' : 'Register'}
-        </h2>
-        <p className="mt-1 text-xs text-slate-400">
-          {isLogin
-            ? 'Sign in to upload videos and manage your streaming library.'
-            : 'Register a new creator account to start streaming.'}
-        </p>
-
         {error && (
-          <div className="mt-4 flex items-center gap-2 rounded-lg border border-rose-500/20 bg-rose-500/10 p-3 text-xs text-rose-300">
-            <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
+          <div className="mb-5 flex items-center gap-2 p-3 border border-zinc-700 text-xs text-zinc-400">
+            <AlertCircle className="h-3.5 w-3.5 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
-        <form onSubmit={handleSubmit} className="mt-5 space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Email address</label>
-            <div className="relative flex items-center">
-              <Mail className="absolute left-3 h-4 w-4 text-slate-500" />
-              <input
-                type="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="you@example.com"
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-              />
-            </div>
+            <label className="block text-xs text-zinc-400 mb-1.5">Email</label>
+            <input
+              type="email"
+              required
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="you@example.com"
+              className="w-full border border-zinc-800 bg-black py-2.5 px-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-zinc-600 transition"
+            />
           </div>
 
           <div>
-            <label className="block text-xs font-medium text-slate-300 mb-1.5">Password</label>
-            <div className="relative flex items-center">
-              <Lock className="absolute left-3 h-4 w-4 text-slate-500" />
-              <input
-                type="password"
-                required
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                placeholder="••••••••"
-                className="w-full rounded-lg border border-slate-700 bg-slate-950 py-2 pl-9 pr-3 text-sm text-white placeholder-slate-500 outline-none focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 transition"
-              />
-            </div>
+            <label className="block text-xs text-zinc-400 mb-1.5">Password</label>
+            <input
+              type="password"
+              required
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="••••••••"
+              className="w-full border border-zinc-800 bg-black py-2.5 px-3 text-sm text-white placeholder-zinc-600 outline-none focus:border-zinc-600 transition"
+            />
           </div>
 
           <button
             type="submit"
             disabled={isLoading}
-            className="w-full flex items-center justify-center gap-2 rounded-lg bg-indigo-600 py-2.5 text-sm font-semibold text-white transition hover:bg-indigo-500 active:scale-98 disabled:opacity-50 cursor-pointer mt-2"
+            className="w-full flex items-center justify-center gap-2 bg-white py-2.5 text-xs font-semibold text-black transition hover:bg-zinc-200 disabled:opacity-50 cursor-pointer mt-2"
           >
-            {isLoading && <Loader2 className="h-4 w-4 animate-spin" />}
-            <span>{isLogin ? 'Sign In' : 'Create Account'}</span>
+            {isLoading && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
+            <span>{isLogin ? 'Sign in' : 'Create account'}</span>
           </button>
         </form>
       </div>

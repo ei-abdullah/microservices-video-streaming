@@ -13,9 +13,9 @@ export interface Media {
 }
 
 export interface CreateUploadResponse {
-    id: string;
-    preSignedUrl: string;
-    status: string;
+    mediaId: string;
+    presignedUrl: string;
+    uploadStatus: string;
     createdAt: string;
     updatedAt: string;
 }

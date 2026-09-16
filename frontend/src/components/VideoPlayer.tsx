@@ -52,7 +52,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, title, autoPlay =
               break;
             default:
               hls?.destroy();
-              setError('Failed to load video stream. Check S3 URL and CORS permissions.');
+              setError('Could not load video. Please try again.');
               setIsLoading(false);
               break;
           }
@@ -68,11 +68,11 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, title, autoPlay =
         }
       });
       video.addEventListener('error', () => {
-        setError('Error streaming HLS video.');
+        setError('Error loading video.');
         setIsLoading(false);
       });
     } else {
-      setError('HLS playback is not supported in this browser.');
+      setError('Video playback is not supported in this browser.');
       setIsLoading(false);
     }
 
@@ -84,8 +84,7 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, title, autoPlay =
   }, [src, autoPlay]);
 
   return (
-    <div className="relative w-full overflow-hidden rounded-2xl bg-black shadow-2xl border border-slate-800">
-      {/* 16:9 Aspect Ratio Container */}
+    <div className="relative w-full overflow-hidden bg-black border border-zinc-800">
       <div className="relative aspect-video w-full">
         <video
           ref={videoRef}
@@ -94,30 +93,25 @@ export const VideoPlayer: React.FC<VideoPlayerProps> = ({ src, title, autoPlay =
           className="h-full w-full object-contain"
         />
 
-        {/* Loading Overlay */}
+        {/* Loading */}
         {isLoading && !error && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/60 backdrop-blur-xs text-white">
-            <Loader2 className="h-10 w-10 animate-spin text-indigo-500" />
-            <span className="mt-2 text-sm text-slate-300">Buffering HLS Stream...</span>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black/80 text-white">
+            <Loader2 className="h-8 w-8 animate-spin text-white" />
           </div>
         )}
 
-        {/* Error Overlay */}
+        {/* Error */}
         {error && (
-          <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-950/90 p-6 text-center text-white">
-            <AlertCircle className="h-12 w-12 text-rose-500 mb-2" />
-            <p className="text-base font-semibold text-rose-300">{error}</p>
-            <p className="text-xs text-slate-400 mt-2 max-w-md break-all">{src}</p>
+          <div className="absolute inset-0 flex flex-col items-center justify-center bg-black p-6 text-center">
+            <AlertCircle className="h-8 w-8 text-zinc-500 mb-2" />
+            <p className="text-sm text-zinc-400">{error}</p>
           </div>
         )}
       </div>
 
       {title && (
-        <div className="bg-slate-900/90 px-4 py-2.5 border-t border-slate-800 flex items-center justify-between">
-          <span className="font-medium text-slate-200 text-sm">{title}</span>
-          <span className="text-xs text-indigo-400 font-mono bg-indigo-500/10 px-2 py-0.5 rounded border border-indigo-500/20">
-            HLS VOD
-          </span>
+        <div className="px-4 py-2.5 border-t border-zinc-800">
+          <span className="text-sm text-zinc-300">{title}</span>
         </div>
       )}
     </div>
