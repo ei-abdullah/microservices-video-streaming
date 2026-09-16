@@ -34,79 +34,62 @@ export const VideoCard: React.FC<VideoCardProps> = ({ media, isSelected, onSelec
   return (
     <div
       onClick={() => isReady && onSelect(media)}
-      className={`group relative flex flex-col overflow-hidden rounded-xl border bg-slate-900/60 transition duration-200 ${
+      className={`group relative flex flex-col overflow-hidden border bg-zinc-950 transition duration-150 ${
         isSelected
-          ? 'border-indigo-500 shadow-lg shadow-indigo-500/10 ring-2 ring-indigo-500/40'
-          : 'border-slate-800 hover:border-slate-700 hover:bg-slate-900'
-      } ${isReady ? 'cursor-pointer hover:-translate-y-1' : 'cursor-default opacity-85'}`}
+          ? 'border-white'
+          : 'border-zinc-800 hover:border-zinc-600'
+      } ${isReady ? 'cursor-pointer' : 'cursor-default opacity-60'}`}
     >
-      {/* Thumbnail Aspect Ratio Area */}
-      <div className="relative aspect-video w-full overflow-hidden bg-slate-950 flex items-center justify-center">
-        {/* Ambient Gradient Background */}
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-950/40 via-slate-950 to-slate-900" />
-
+      {/* Thumbnail */}
+      <div className="relative aspect-video w-full overflow-hidden bg-black flex items-center justify-center">
         {isReady && (
-          <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-full bg-indigo-600/90 text-white shadow-lg transition duration-200 group-hover:scale-110 group-hover:bg-indigo-500">
-            <Play className="h-5 w-5 fill-current ml-0.5" />
+          <div className="relative z-10 flex h-10 w-10 items-center justify-center rounded-full bg-white text-black transition duration-150 group-hover:scale-110">
+            <Play className="h-4 w-4 fill-current ml-0.5" />
           </div>
         )}
 
         {isProcessing && (
-          <div className="relative z-10 flex flex-col items-center gap-1.5 text-amber-400">
-            <Loader2 className="h-8 w-8 animate-spin" />
-            <span className="text-xs font-medium">Processing HLS...</span>
+          <div className="relative z-10 flex flex-col items-center gap-1.5 text-zinc-400">
+            <Loader2 className="h-6 w-6 animate-spin" />
+            <span className="text-xs">Processing…</span>
           </div>
         )}
 
         {isFailed && (
-          <div className="relative z-10 flex flex-col items-center gap-1 text-rose-400">
-            <AlertTriangle className="h-7 w-7" />
-            <span className="text-xs font-semibold">Transcoding Failed</span>
+          <div className="relative z-10 flex flex-col items-center gap-1 text-zinc-500">
+            <AlertTriangle className="h-6 w-6" />
+            <span className="text-xs">Failed</span>
           </div>
         )}
 
-        {/* Duration Badge */}
+        {/* Duration */}
         {isReady && media.duration && (
-          <span className="absolute bottom-2 right-2 z-10 rounded bg-black/80 px-1.5 py-0.5 text-xs font-mono font-medium text-white backdrop-blur-xs">
+          <span className="absolute bottom-2 right-2 z-10 bg-black/80 px-1.5 py-0.5 text-xs font-mono text-white">
             {formatDuration(media.duration)}
-          </span>
-        )}
-
-        {/* Resolution Badge */}
-        {isReady && media.height && (
-          <span className="absolute top-2 left-2 z-10 rounded bg-slate-900/90 px-1.5 py-0.5 text-[10px] font-bold text-slate-300 border border-slate-700">
-            {media.height}p
           </span>
         )}
       </div>
 
-      {/* Meta Info */}
-      <div className="flex flex-1 flex-col p-3.5">
-        <h3 className="line-clamp-1 text-sm font-semibold text-slate-100 group-hover:text-indigo-400">
-          {media.title || `Video #${media.id.slice(0, 8)}`}
+      {/* Info */}
+      <div className="flex flex-1 flex-col p-3">
+        <h3 className="line-clamp-1 text-sm font-medium text-white">
+          {media.title || `Untitled`}
         </h3>
 
-        <div className="mt-2.5 flex items-center justify-between text-xs text-slate-400">
+        <div className="mt-2 flex items-center justify-between text-xs text-zinc-500">
           <div className="flex items-center gap-1">
-            <Clock className="h-3.5 w-3.5" />
+            <Clock className="h-3 w-3" />
             <span>{formatDate(media.createdAt)}</span>
           </div>
 
-          {/* Status Chip */}
           {isReady && (
-            <span className="inline-flex items-center rounded-full bg-emerald-500/10 px-2 py-0.5 text-[11px] font-medium text-emerald-400 border border-emerald-500/20">
-              Ready
-            </span>
+            <span className="text-zinc-500">Ready</span>
           )}
           {isProcessing && (
-            <span className="inline-flex items-center rounded-full bg-amber-500/10 px-2 py-0.5 text-[11px] font-medium text-amber-400 border border-amber-500/20">
-              {media.status}
-            </span>
+            <span className="text-zinc-500">Processing</span>
           )}
           {isFailed && (
-            <span className="inline-flex items-center rounded-full bg-rose-500/10 px-2 py-0.5 text-[11px] font-medium text-rose-400 border border-rose-500/20">
-              Failed
-            </span>
+            <span className="text-zinc-500">Failed</span>
           )}
         </div>
       </div>

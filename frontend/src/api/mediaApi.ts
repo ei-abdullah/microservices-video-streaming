@@ -19,11 +19,11 @@ export const mediaApi = {
     },
 
     uploadToS3: async (
-        preSignedUrl: string,
+        presignedUrl: string,
         file: File,
         onProgress: (percent: number) => void
     ): Promise<void> => {
-        await axios.put(preSignedUrl, file, {
+        await axios.put(presignedUrl, file, {
             headers: {
                 'Content-Type': file.type || 'video/mp4',
             },
